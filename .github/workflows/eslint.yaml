@@ -1,0 +1,34 @@
+name: Lint
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'lib/**'
+
+    tags-ignore:
+      - \d+.\d+.\d+
+
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 20.x ]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: |
+        npm i eslint -g
+        eslint .
+      env:
+        CI: true
