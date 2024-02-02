@@ -14,19 +14,18 @@ export class Renderer {
 		this.#debug    = (options.debug  === true);
 	}
 
-	async compile(path, base = process.argv[1], level = 0) {
+	async compilePath(path, base = process.argv[1], level = 0) {
 		const filename = await this.#resolver(path, base);
 
 		if (!filename) return null;
 
 		const data = await readFile(filename);
 
-		const level_change = (code) => {
-			if (!this.#debug) return 0;
+		return await this.compileData(data, level);
+	}
 
-			return (code.match(/\{/g) || []).length - (code.match(/\}/g) || []).length;
-		};
-		const indent   = (n = 1) => {
+	async compileData(data, level = 0) {
+		const indent = (n = 1) => {
 			if (!this.#debug) return "";
 
 			return "\t".repeat(level + n);
@@ -123,7 +122,7 @@ export class Renderer {
 									code += `${indent()}__output += "${escape(new Error(`Unknown command: ${command}`))}";\n`;
 							}
 						} else {
-							const level_diff = level_change(line.code);
+							const level_diff = this.#levelChange(line.code);
 
 							if (level_diff < 0) {
 								level += level_diff;
@@ -154,6 +153,12 @@ export class Renderer {
 		ret.code = code;
 
 		return ret;
+	}
+
+	#levelChange(code) {
+		if (!this.#debug) return 0;
+
+		return (code.match(/\{/g) || []).length - (code.match(/\}/g) || []).length;
 	}
 }
 
