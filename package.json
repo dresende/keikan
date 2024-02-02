@@ -1,0 +1,11 @@
+{
+	"name"        : "keikan",
+	"version"     : "0.0.0",
+	"type"        : "module",
+	"description" : "Node template based on ejs",
+	"license"     : "MIT",
+	"keywords"    : [ "template" ],
+	"author"      : "Diogo Resende <dresende@thinkdigital.pt>",
+	"repository"  : "http://github.com/dresende/keikan.git",
+	"main"        : "index.js"
+}
