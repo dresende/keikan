@@ -9,12 +9,30 @@ describe("Renderer", () => {
 	});
 
 	it("compileData returns a Promise", () => {
-		const p = keikan.compileData("hello world");
+		const view = keikan.compileData("hello world");
 
-		p.should.be.instanceOf(Promise);
+		view.should.be.instanceOf(Promise);
 	});
 
 	it("exposes a compilePath method", () => {
 		keikan.compilePath.should.be.of.type("function");
+	});
+
+	it("compilePath returns a Promise", () => {
+		const view = keikan.compilePath("views/simple");
+
+		view.should.be.instanceOf(Promise);
+	});
+
+	it("compilePath returns null if file is not found", async () => {
+		const view = await keikan.compilePath("notfound");
+
+		should(view).be.null();
+	});
+
+	it("compilePath returns a view that can then be renderer", async () => {
+		const view = await keikan.compilePath(import.meta.dirname + "/views/simple");
+
+		view({ name: "world" }).should.equal("<h3>Hello world</h3>");
 	});
 });

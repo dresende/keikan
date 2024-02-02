@@ -19,9 +19,13 @@ export class Renderer {
 
 		if (!filename) return null;
 
-		const data = await readFile(filename);
+		try {
+			const data = await readFile(filename);
 
-		return await this.compileData(data, level);
+			return await this.compileData(data, level);
+		} catch (err) {
+			return null;
+		}
 	}
 
 	async compileData(data, level = 0) {
