@@ -11,11 +11,22 @@ npm i keikan
 
 ### Usage
 
+First, assume we have a file named `path/to/file.html` with the following contents:
+
+```html
+<h3>
+	Hello
+	<strong><%= name %></strong>
+</h3>
+```
+
+Then, you could compile and render this file with the following code:
+
 ```js
 import { Renderer } from "keikan"
 
 const keikan = new Renderer({ debug : true });
-const view   = await keikan.compile("examples/readme"); // check examples folder
+const view   = await keikan.compilePath("path/to/file");
 
 console.log(view({ name: "Diogo" }));
 ```
