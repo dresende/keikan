@@ -148,7 +148,7 @@ export class Renderer {
 			if (this.#debug) {
 				return funct.call(env).replace(/\n\s*\n/g, "\n").trim();
 			}
-			return funct.call(env).replace(/\n\s*\n/g, "\n").replace(/\x3e\n\x3c/g, "><").trim();
+			return funct.call(env).replace(/\n\s*\n/g, "\n").replace(/\x3e\n/g, ">").trim();
 		};
 
 		ret.code = code;
