@@ -14,7 +14,7 @@ npm i keikan
 ```js
 import { Renderer } from "keikan"
 
-const keikan = new Renderer({ debug : false });
+const keikan = new Renderer({ debug : true });
 const view   = await keikan.compile("examples/readme"); // check examples folder
 
 console.log(view({ name: "Diogo" }));
