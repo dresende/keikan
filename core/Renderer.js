@@ -29,15 +29,16 @@ export class Renderer {
 	}
 
 	async compileData(data, options = {}, level = 0) {
+		const debug  = ("debug" in options ? options.debug : this.#debug);
 		const indent = (n = 1) => {
-			if (!this.#debug) return "";
+			if (!debug) return "";
 
 			return "\t".repeat(level + n);
 		};
 
 		let i = 0, text_level = level, code = "", lines = [];
 
-		if (this.#debug && options.filename) {
+		if (debug && options.filename) {
 			code += `${indent(0)}// ${options.filename}\n`;
 		}
 
@@ -70,7 +71,7 @@ export class Renderer {
 
 		for (const line of lines) {
 			if ("text" in line) {
-				if (!this.#debug) {
+				if (!debug) {
 					line.text = line.text.toString().replace(/\n\s+/mg, "\n");
 				}
 				code += `${indent()}__output += "${escape(line.text, text_level)}";\n`;
@@ -111,10 +112,10 @@ export class Renderer {
 
 					switch (command) {
 						case "include":
-							const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, this.#debug ? text_level + 2 : text_level);
+							const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, debug ? text_level + 2 : text_level);
 
 							if (view !== null) {
-								if (this.#debug) {
+								if (debug) {
 									code += `\n${indent()}// include ${match.groups.method}\n`;
 								}
 
@@ -131,7 +132,7 @@ export class Renderer {
 					continue;
 				}
 
-				const level_diff = this.#levelChange(line.code);
+				const level_diff = this.#levelChange(line.code, debug);
 
 				if (level_diff < 0) {
 					level += level_diff;
@@ -151,7 +152,7 @@ export class Renderer {
 		const funct = new Function("__filters", code);
 
 		const ret = (env) => {
-			if (this.#debug) {
+			if (debug) {
 				return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").trim();
 			}
 			return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").replace(/\x3e\n/g, ">").trim();
@@ -162,8 +163,8 @@ export class Renderer {
 		return ret;
 	}
 
-	#levelChange(code) {
-		if (!this.#debug) return 0;
+	#levelChange(code, debug) {
+		if (!debug) return 0;
 
 		return (code.match(/\{/g) || []).length - (code.match(/\}/g) || []).length;
 	}
