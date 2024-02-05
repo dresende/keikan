@@ -18,8 +18,6 @@ export class Renderer {
 	async compilePath(path, base = process.argv[1], level = 0) {
 		const filename = await this.#resolver(path, base);
 
-		if (!filename) return null;
-
 		try {
 			const data = await readFile(filename);
 
@@ -40,6 +38,10 @@ export class Renderer {
 
 		if (this.#debug && options.filename) {
 			code += `${indent(0)}// ${options.filename}\n`;
+		}
+
+		if (level === 0) {
+			code += `${indent(0)}const __quote = (html) => (String(html).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;").replace(/"/g, "&quot;"));\n`;
 		}
 
 		code += `${indent(0)}let __output = "";\n`;
@@ -79,7 +81,7 @@ export class Renderer {
 			lines[i]           = null;
 		}
 
-		lines.filter(line => line !== null);
+		lines = lines.filter(line => line !== null);
 
 		for (const line of lines) {
 			if ("text" in line) {
@@ -91,7 +93,7 @@ export class Renderer {
 				switch (line.code[0]) {
 					// escape content
 					case "=":
-						code += `${indent()}__output += ${line.code.substr(1).trim()};\n`;
+						code += `${indent()}__output += __quote(${line.code.substr(1).trim()});\n`;
 						break;
 					// unescaped content
 					case "-":
