@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { Resolver } from "./Resolver.js";
 import { Error }    from "./Error.js";
+import { dirname }  from "path";
 
 const START_BLOCK = "<%";
 const END_BLOCK   = "%>";
@@ -22,13 +23,13 @@ export class Renderer {
 		try {
 			const data = await readFile(filename);
 
-			return await this.compileData(data, level);
+			return await this.compileData(data, { filename }, level);
 		} catch (err) {
 			return null;
 		}
 	}
 
-	async compileData(data, level = 0) {
+	async compileData(data, options = {}, level = 0) {
 		const indent = (n = 1) => {
 			if (!this.#debug) return "";
 
@@ -37,8 +38,8 @@ export class Renderer {
 
 		let i = 0, text_level = level, code = "", lines = [];
 
-		if (this.#debug) {
-			code += `${indent(0)}// ${filename}\n`;
+		if (this.#debug && options.filename) {
+			code += `${indent(0)}// ${options.filename}\n`;
 		}
 
 		code += `${indent(0)}let __output = "";\n`;
@@ -108,7 +109,7 @@ export class Renderer {
 
 							switch (command) {
 								case "include":
-									const view = await this.compile(match.groups.method, path, this.#debug ? text_level + 2 : text_level);
+									const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, this.#debug ? text_level + 2 : text_level);
 
 									if (view !== null) {
 										if (this.#debug) {

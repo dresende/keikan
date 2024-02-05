@@ -6,7 +6,7 @@ export function Resolver(path, base = null) {
 	}
 
 	if (base) {
-		return resolve(dirname(base), path);
+		return resolve(base, path);
 	}
 
 	return resolve(path);
