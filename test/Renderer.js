@@ -43,4 +43,4 @@ describe("Features", () => {
 
 		view({ name: "world" }).should.equal("<h3>Hello world\n</h3>");
 	});
-})
+});
