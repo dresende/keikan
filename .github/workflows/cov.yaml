@@ -25,8 +25,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm i --no-optional
-    - run: npm i nyc -g
-    - run: nyc npm test
+    - run: npm i c8 -g
+    - run: c8 npm test
       env:
         CI: true
     - name: Upload coverage reports to Codecov
