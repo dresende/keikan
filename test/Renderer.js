@@ -37,7 +37,7 @@ describe("Renderer", () => {
 	});
 });
 
-describe.only("Features", () => {
+describe("Features", () => {
 	it("<% include %> can be used to load another view", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/complex");
 
