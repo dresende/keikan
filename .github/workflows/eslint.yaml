@@ -4,7 +4,8 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'lib/**'
+      - 'core/**'
+      - 'test/**'
 
     tags-ignore:
       - \d+.\d+.\d+
