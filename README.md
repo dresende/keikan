@@ -1,5 +1,6 @@
 ## Keikan (景観)
 
+![Lint](https://github.com/dresende/keikan/workflows/Lint/badge.svg)
 ![Continuous Integration](https://github.com/dresende/keikan/workflows/Continuous%20Integration/badge.svg)
 [![Coverage Report](https://codecov.io/gh/dresende/keikan/branch/master/graph/badge.svg?token=TZ5L3T3RW7)](https://codecov.io/gh/dresende/keikan)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
