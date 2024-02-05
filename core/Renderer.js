@@ -1,7 +1,7 @@
-import { readFile } from "node:fs/promises";
-import { Resolver } from "./Resolver.js";
-import { Error }    from "./Error.js";
-import { dirname }  from "path";
+import { readFile }       from "node:fs/promises";
+import { Resolver }       from "./Resolver.js";
+import { RenderingError } from "./RenderingError.js";
+import { dirname }        from "path";
 
 const START_BLOCK = "<%";
 const END_BLOCK   = "%>";
@@ -60,7 +60,7 @@ export class Renderer {
 			j = data.indexOf(END_BLOCK, i);
 
 			if (j == -1) {
-				lines.push({ text: new Error("Invalid block") });
+				lines.push({ text: new RenderingError("Invalid block") });
 				break;
 			}
 
@@ -120,11 +120,11 @@ export class Renderer {
 										code += view.code;
 										code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
 									} else {
-										code += `${indent()}__output += "${escape(new Error(`Include not found: ${match.groups.method}`))}";\n`;
+										code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
 									}
 									break;
 								default:
-									code += `${indent()}__output += "${escape(new Error(`Unknown command: ${command}`))}";\n`;
+									code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
 							}
 						} else {
 							const level_diff = this.#levelChange(line.code);

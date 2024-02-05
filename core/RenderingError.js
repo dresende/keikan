@@ -1,4 +1,4 @@
-export class Error {
+export class RenderingError {
 	#description = "";
 	#parameters  = {};
 
