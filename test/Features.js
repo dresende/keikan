@@ -22,4 +22,10 @@ describe("Features", () => {
 		view({ condition: true }).should.equal("<h3>Hello\n</h3>");
 		view({ condition: false }).should.equal("<h3></h3>");
 	});
+
+	it("removes unnecessary whitespace", async () => {
+		const view = await keikan.compilePath(import.meta.dirname + "/views/long");
+
+		view().should.equal("<h3><strong>Hello\n</strong></h3>");
+	});
 });
