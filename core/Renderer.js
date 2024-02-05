@@ -71,76 +71,67 @@ export class Renderer {
 			i = j + END_BLOCK.length;
 		}
 
-		// reduce code my merging text lines
-		for (let i = 1; i < lines.length; i++) {
-			if (lines[i] === null || lines[i - 1] === null) continue;
-			if (lines[i - 1].level !== lines[i].level) continue;
-			if (!("text" in lines[i]) || !("text" in lines[i - 1])) continue;
-
-			lines[i - 1].text += lines[i].text;
-			lines[i]           = null;
-		}
-
-		lines = lines.filter(line => line !== null);
-
 		for (const line of lines) {
 			if ("text" in line) {
 				if (!this.#debug) {
-					line.text = line.text.replace(/\n\s+/mg, "\n");
+					line.text = line.text.toString().replace(/\n\s+/mg, "\n");
 				}
 				code += `${indent()}__output += "${escape(line.text, text_level)}";\n`;
-			} else if ("code" in line) {
-				switch (line.code[0]) {
-					// escape content
-					case "=":
+				continue;
+			}
+
+			if ("code" in line) {
+				if (line.code[0] == "#") {
+					// comment
+					continue;
+				}
+
+				if ([ "-", "=" ].includes(line.code[0])) {
+					if (line.code[0] == "=") {
 						code += `${indent()}__output += __quote(${line.code.substr(1).trim()});\n`;
-						break;
-					// unescaped content
-					case "-":
+					} else {
 						code += `${indent()}__output += ${line.code.substr(1).trim()};\n`;
-						break;
-					// ignore content
-					case "#":
-						break;
-					// simple code
-					default:
-						const match = line.code.match(/^(?<command>\w+)\s+(?<method>[^\(]+)(\((?<parameters>.*)\))?$/);
+					}
+					continue;
+				}
 
-						if (match) {
-							const command = match.groups.command;
+				const match = line.code.match(/^(?<command>\w+)\s+(?<method>[^\(]+)(\((?<parameters>.*)\))?$/);
 
-							switch (command) {
-								case "include":
-									const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, this.#debug ? text_level + 2 : text_level);
+				if (match) {
+					const command = match.groups.command;
 
-									if (view !== null) {
-										if (this.#debug) {
-											code += `\n${indent()}// include ${match.groups.method}\n`;
-										}
+					switch (command) {
+						case "include":
+							const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, this.#debug ? text_level + 2 : text_level);
 
-										code += `${indent()}__output += ((self) => {\n`;
-										code += view.code;
-										code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
-									} else {
-										code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
-									}
-									break;
-								default:
-									code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
+							if (view !== null) {
+								if (this.#debug) {
+									code += `\n${indent()}// include ${match.groups.method}\n`;
+								}
+
+								code += `${indent()}__output += ((self) => {\n`;
+								code += view.code;
+								code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
+							} else {
+								code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
 							}
-						} else {
-							const level_diff = this.#levelChange(line.code);
+							break;
+						default:
+							code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
+					}
+					continue;
+				}
 
-							if (level_diff < 0) {
-								level += level_diff;
-							}
+				const level_diff = this.#levelChange(line.code);
 
-							code += `${indent()}${line.code}\n`;
+				if (level_diff < 0) {
+					level += level_diff;
+				}
 
-							if (level_diff > 0) {
-								level += level_diff;
-							}
-						}
+				code += `${indent()}${line.code}\n`;
+
+				if (level_diff > 0) {
+					level += level_diff;
 				}
 			}
 		}
