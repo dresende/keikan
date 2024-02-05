@@ -10,6 +10,14 @@ describe("Features", () => {
 		view({ name: "world" }).should.equal("<h3>\n\tHello world\n</h3>");
 	});
 
+	it("<% include %> can be called with no arguments", async () => {
+		const view1 = await keikan.compileData("<% include test/views/label() %>");
+		const view2 = await keikan.compileData("<% include test/views/label() %>", { debug: false });
+
+		view1().should.equal("Hello undefined");
+		view2().should.equal("Hello undefined");
+	});
+
 	it("<% include %> will return an <error/> if not found", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/has-bad-include");
 
