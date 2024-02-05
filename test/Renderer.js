@@ -35,12 +35,10 @@ describe("Renderer", () => {
 
 		view({ name: "world" }).should.equal("<h3>Hello world</h3>");
 	});
-});
 
-describe("Features", () => {
-	it("<% include %> can be used to load another view", async () => {
-		const view = await keikan.compilePath(import.meta.dirname + "/views/complex");
+	it("compilePath will use process cwd when base is explicitly passed as null", async () => {
+		const view = await keikan.compilePath("test/views/simple", null);
 
-		view({ name: "world" }).should.equal("<h3>Hello world\n</h3>");
+		view({ name: "world" }).should.equal("<h3>Hello world</h3>");
 	});
 });
