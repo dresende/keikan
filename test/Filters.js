@@ -15,4 +15,10 @@ describe("Filters", () => {
 
 		view().should.equal("&lt;b&gt;bold&lt;/b&gt;");
 	});
+
+	it("json", async () => {
+		const view = await keikan.compileData("<%-: { x: 2 } | json %>");
+
+		view().should.equal(`<pre>${JSON.stringify({ x: 2 }, null, 4)}</pre>`);
+	});
 });
