@@ -36,3 +36,11 @@ describe("Renderer", () => {
 		view({ name: "world" }).should.equal("<h3>Hello world</h3>");
 	});
 });
+
+describe.only("Features", () => {
+	it("<% include %> can be used to load another view", async () => {
+		const view = await keikan.compilePath(import.meta.dirname + "/views/complex");
+
+		view({ name: "world" }).should.equal("<h3>Hello world\n</h3>");
+	});
+})
