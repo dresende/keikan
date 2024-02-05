@@ -37,8 +37,7 @@ export class Renderer {
 		};
 
 		const text_level = level;
-		const lines      = [];
-		let i            = 0;
+		const lines      = this.#dataToLines(data);
 		let code         = "";
 
 		if (debug && options.filename) {
@@ -48,104 +47,81 @@ export class Renderer {
 		code += `${indent(0)}let __output = "";\n`;
 		code += `${indent(0)}try { with (this) {\n`;
 
-		while (i < data.length) {
-			let j = data.indexOf(START_BLOCK, i);
-
-			if (j == -1) {
-				lines.push({ text: data.slice(i, data.length).toString() });
-				break;
-			}
-
-			lines.push({ text: data.slice(i, j).toString() });
-
-			i = j + START_BLOCK.length;
-
-			j = data.indexOf(END_BLOCK, i);
-
-			if (j == -1) {
-				lines.push({ text: new RenderingError("Invalid block") });
-				break;
-			}
-
-			lines.push({ code: data.slice(i, j).toString().trim() });
-
-			i = j + END_BLOCK.length;
-		}
-
 		for (const line of lines) {
-			if ("text" in line) {
-				if (!debug) {
-					line.text = line.text.toString().replace(/\n\s+/mg, "\n");
-				}
-				code += `${indent()}__output += "${escape(line.text, text_level)}";\n`;
-				continue;
-			}
-
-			if ("code" in line) {
-				if (line.code[0] == "#") {
+			switch (line[0]) {
+				case "text":
+					if (!debug) {
+						line[1] = line[1].toString().replace(/\n\s+/mg, "\n");
+					}
+					code += `${indent()}__output += "${escape(line[1], text_level)}";\n`;
+					break;
+				case "code": {
 					// comment
-					continue;
-				}
+					if (line[1][0] == "#") {
+						break;
+					}
 
-				if (line.code[0] == "=") {
 					// quoted data
-					code += `${indent()}__output += __filters.quote(${line.code.substr(1).trim()});\n`;
-					continue;
-				}
-
-				if (line.code[0] == "-") {
-					if (line.code[1] == ":") {
-						// unquoted data with filters
-						const line_code = line.code.substr(2).trim();
-						const p         = line_code.indexOf("|");
-						const filters   = line_code.substr(p + 1).split(/\s*\|\s*/).map(name => name.trim()).filter(name => name.length);
-
-						code += `${indent()}__output += ${filters.reduce((code_line, name) => (`__filters.${name}(${code_line})`), line_code.substr(0, p).trim())};\n`;
-					} else {
-						// unquoted data
-						code += `${indent()}__output += ${line.code.substr(1).trim()};\n`;
+					if (line[1][0] == "=") {
+						code += `${indent()}__output += __filters.quote(${line[1].substr(1).trim()});\n`;
+						break;
 					}
-					continue;
-				}
 
-				const match = line.code.match(/^(?<command>\w+)\s+(?<method>[^\(]+)(\((?<parameters>.*)\))?$/);
+					// unquoted data
+					if (line[1][0] == "-") {
+						if (line[1][1] == ":") {
+							// unquoted data with filters
+							const line_code = line[1].substr(2).trim();
+							const p         = line_code.indexOf("|");
+							const filters   = line_code.substr(p + 1).split(/\s*\|\s*/).map(name => name.trim()).filter(name => name.length);
 
-				if (match) {
-					const command = match.groups.command;
-
-					switch (command) {
-						case "include": {
-							const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, debug ? text_level + 2 : text_level);
-
-							if (view !== null) {
-								if (debug) {
-									code += `\n${indent()}// include ${match.groups.method}\n`;
-								}
-
-								code += `${indent()}__output += ((self) => {\n`;
-								code += view.code;
-								code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
-							} else {
-								code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
-							}
-							break;
+							code += `${indent()}__output += ${filters.reduce((code_line, name) => (`__filters.${name}(${code_line})`), line_code.substr(0, p).trim())};\n`;
+						} else {
+							// unquoted data, no filters
+							code += `${indent()}__output += ${line[1].substr(1).trim()};\n`;
 						}
-						default:
-							code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
+						break;
 					}
-					continue;
-				}
 
-				const level_diff = this.#levelChange(line.code, debug);
+					const match = line[1].match(/^(?<command>\w+)\s+(?<method>[^\(]+)(\((?<parameters>.*)\))?$/);
 
-				if (level_diff < 0) {
-					level += level_diff;
-				}
+					if (match) {
+						const command = match.groups.command;
 
-				code += `${indent()}${line.code}\n`;
+						switch (command) {
+							case "include": {
+								const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, debug ? text_level + 2 : text_level);
 
-				if (level_diff > 0) {
-					level += level_diff;
+								if (view !== null) {
+									if (debug) {
+										code += `\n${indent()}// include ${match.groups.method}\n`;
+									}
+
+									code += `${indent()}__output += ((self) => {\n`;
+									code += view.code;
+									code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
+								} else {
+									code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
+								}
+								break;
+							}
+							default:
+								code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
+						}
+						continue;
+					}
+
+					const level_diff = this.#levelChange(line[1], debug);
+
+					if (level_diff < 0) {
+						level += level_diff;
+					}
+
+					code += `${indent()}${line[1]}\n`;
+
+					if (level_diff > 0) {
+						level += level_diff;
+					}
 				}
 			}
 		}
@@ -165,6 +141,37 @@ export class Renderer {
 		ret.code = code;
 
 		return ret;
+	}
+
+	#dataToLines(data) {
+		const lines = [];
+		let i       = 0;
+
+		while (i < data.length) {
+			let j = data.indexOf(START_BLOCK, i);
+
+			if (j == -1) {
+				lines.push([ "text", data.slice(i, data.length).toString() ]);
+				break;
+			}
+
+			lines.push([ "text", data.slice(i, j).toString() ]);
+
+			i = j + START_BLOCK.length;
+
+			j = data.indexOf(END_BLOCK, i);
+
+			if (j == -1) {
+				lines.push([ "text", new RenderingError("Invalid block") ]);
+				break;
+			}
+
+			lines.push([ "code", data.slice(i, j).toString().trim() ]);
+
+			i = j + END_BLOCK.length;
+		}
+
+		return lines;
 	}
 
 	#levelChange(code, debug) {
