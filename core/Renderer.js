@@ -1,6 +1,7 @@
 import { readFile }       from "node:fs/promises";
 import { Resolver }       from "./Resolver.js";
 import { RenderingError } from "./RenderingError.js";
+import * as Filters       from "./Filters.js";
 import { dirname }        from "path";
 
 const START_BLOCK = "<%";
@@ -38,10 +39,6 @@ export class Renderer {
 
 		if (this.#debug && options.filename) {
 			code += `${indent(0)}// ${options.filename}\n`;
-		}
-
-		if (level === 0) {
-			code += `${indent(0)}const __quote = (html) => (String(html).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;").replace(/"/g, "&quot;"));\n`;
 		}
 
 		code += `${indent(0)}let __output = "";\n`;
@@ -86,10 +83,22 @@ export class Renderer {
 					continue;
 				}
 
-				if ([ "-", "=" ].includes(line.code[0])) {
-					if (line.code[0] == "=") {
-						code += `${indent()}__output += __quote(${line.code.substr(1).trim()});\n`;
+				if (line.code[0] == "=") {
+					// quoted data
+					code += `${indent()}__output += __filters.quote(${line.code.substr(1).trim()});\n`;
+					continue;
+				}
+
+				if (line.code[0] == "-") {
+					if (line.code[1] == ":") {
+						// unquoted data with filters
+						const line_code = line.code.substr(2).trim();
+						const p         = line_code.indexOf("|");
+						const filters   = line_code.substr(p + 1).split(/\s*\|\s*/).map(name => name.trim()).filter(name => name.length);
+
+						code += `${indent()}__output += ${filters.reduce((code_line, name) => (`__filters.${name}(${code_line})`), line_code.substr(0, p).trim())};\n`;
 					} else {
+						// unquoted data
 						code += `${indent()}__output += ${line.code.substr(1).trim()};\n`;
 					}
 					continue;
@@ -139,13 +148,13 @@ export class Renderer {
 		code += `${indent(0)}} } catch (err) { __output += err; }\n`;
 		code += `${indent(0)}return __output;\n`;
 
-		const funct = new Function(code);
+		const funct = new Function("__filters", code);
 
 		const ret = (env) => {
 			if (this.#debug) {
-				return funct.call(env).replace(/\n\s*\n/g, "\n").trim();
+				return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").trim();
 			}
-			return funct.call(env).replace(/\n\s*\n/g, "\n").replace(/\x3e\n/g, ">").trim();
+			return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").replace(/\x3e\n/g, ">").trim();
 		};
 
 		ret.code = code;
