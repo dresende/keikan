@@ -1,4 +1,4 @@
-import { dirname, resolve } from "path";
+import { resolve } from "path";
 
 export function Resolver(path, base = null) {
 	if (!path.endsWith(".html")) {

@@ -36,7 +36,10 @@ export class Renderer {
 			return "\t".repeat(level + n);
 		};
 
-		let i = 0, text_level = level, code = "", lines = [];
+		const text_level = level;
+		const lines      = [];
+		let i            = 0;
+		let code         = "";
 
 		if (debug && options.filename) {
 			code += `${indent(0)}// ${options.filename}\n`;
@@ -45,7 +48,7 @@ export class Renderer {
 		code += `${indent(0)}let __output = "";\n`;
 		code += `${indent(0)}try { with (this) {\n`;
 
-		while (true) {
+		while (i < data.length) {
 			let j = data.indexOf(START_BLOCK, i);
 
 			if (j == -1) {
@@ -111,7 +114,7 @@ export class Renderer {
 					const command = match.groups.command;
 
 					switch (command) {
-						case "include":
+						case "include": {
 							const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, debug ? text_level + 2 : text_level);
 
 							if (view !== null) {
@@ -126,6 +129,7 @@ export class Renderer {
 								code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
 							}
 							break;
+						}
 						default:
 							code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
 					}
