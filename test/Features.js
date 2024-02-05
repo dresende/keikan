@@ -16,6 +16,12 @@ describe("Features", () => {
 		view().should.equal("<h3>\n\t<error>Include not found: notfound</error>\n</h3>");
 	});
 
+	it("<% include %> used in compileData will use process cwd", async () => {
+		const view = await keikan.compileData("<% include label() %>");
+
+		view().should.equal("<error>Include not found: label</error>");
+	});
+
 	it("<%= %>, <%- %> and <%# %>", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/escaping");
 

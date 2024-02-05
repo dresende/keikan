@@ -14,6 +14,12 @@ describe("Renderer", () => {
 		view.should.be.instanceOf(Promise);
 	});
 
+	it("compileData handles code", async () => {
+		const view = await keikan.compileData("<h3><% if (true) { %>hello world<% } %></h3>");
+
+		view().should.be.equal("<h3>hello world</h3>");
+	});
+
 	it("exposes a compilePath method", () => {
 		keikan.compilePath.should.be.of.type("function");
 	});
