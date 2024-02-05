@@ -1,9 +1,14 @@
-import { Renderer } from "../index.js"
-import should       from "should"
+import { Filters, Renderer } from "../index.js"
+import should                from "should"
 
 const keikan = new Renderer({ debug: true });
 
 describe("Filters", () => {
+	it("are exposed in Renderer", async () => {
+		Filters.nl.should.be.of.type("function");
+		Filters.quote.should.be.of.type("function");
+	});
+
 	it("nl", async () => {
 		const view = await keikan.compileData("<%-: \"text\\nwith\\nnewlines\" | nl %>");
 
