@@ -1,5 +1,10 @@
 ## Keikan (景観)
 
+![Continuous Integration](https://github.com/dresende/keikan/workflows/Continuous%20Integration/badge.svg)
+[![Coverage Report](https://codecov.io/gh/dresende/keikan/branch/master/graph/badge.svg?token=TZ5L3T3RW7)](https://codecov.io/gh/dresende/keikan)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Author: Diogo Resende](https://img.shields.io/badge/author-dresende-orange.svg)](mailto:dresende@thinkdigital.pt)
+
 This is a node.js template module. It's based on EJS, written in ES6 with
 simplicity in mind.
 
