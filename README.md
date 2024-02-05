@@ -55,3 +55,17 @@ If `debug` flag is disabled or not present, it would instead print:
 ```
 
 It will try to remove spaces where it know they're not needed.
+
+### Express Usage
+
+```js
+import * as Keikan from "keikan"
+import express     from "express"
+
+const app = express();
+
+app.engine("html", Keikan.renderPath);
+app.set("view engine", "html");
+
+// ...
+```
