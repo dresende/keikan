@@ -1,11 +1,11 @@
 ## Keikan (景観)
 
 [![Version](https://img.shields.io/npm/v/keikan.svg)](https://npmjs.org/package/keikan)
-![Lint](https://github.com/dresende/keikan/workflows/Lint/badge.svg)
-![Continuous Integration](https://github.com/dresende/keikan/workflows/Continuous%20Integration/badge.svg)
-[![Coverage Report](https://codecov.io/gh/dresende/keikan/branch/master/graph/badge.svg?token=TZ5L3T3RW7)](https://codecov.io/gh/dresende/keikan)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Author: Diogo Resende](https://img.shields.io/badge/author-dresende-orange.svg)](mailto:dresende@thinkdigital.pt)
+![Lint](https://github.com/dresende/keikan/workflows/Lint/badge.svg)
+![CI](https://github.com/dresende/keikan/workflows/Continuous%20Integration/badge.svg)
+[![Coverage](https://codecov.io/gh/dresende/keikan/branch/master/graph/badge.svg?token=TZ5L3T3RW7)](https://codecov.io/gh/dresende/keikan)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 This is a node.js template module. It's based on EJS, written in ES6 with
 simplicity in mind.
