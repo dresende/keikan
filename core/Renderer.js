@@ -21,7 +21,7 @@ export class Renderer {
 		let base    = ""; // empty means default (process.cwd), if null is passed it means no base
 		let level   = 0;
 
-		[ ...args ].map(arg => {
+		for (const arg of args) {
 			switch (typeof arg) {
 				case "string":
 					base = arg;
@@ -32,11 +32,11 @@ export class Renderer {
 				default:
 					if (arg === null && !base.length) {
 						base = arg;
-					} else {
+					} else if (Object.keys(arg).length) {
 						options = arg;
 					}
 			}
-		});
+		}
 
 		if (base !== null && !base.length) {
 			base = process.cwd();
@@ -47,7 +47,6 @@ export class Renderer {
 		try {
 			const data = await readFile(filename);
 
-			options = options || {};
 			options.filename = filename;
 
 			return await this.compileData(data, options, level);
