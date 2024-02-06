@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/npm/v/keikan.svg)](https://npmjs.org/package/keikan)
 [![Author: Diogo Resende](https://img.shields.io/badge/author-dresende-orange.svg)](mailto:dresende@thinkdigital.pt)
 ![Lint](https://github.com/dresende/keikan/workflows/Lint/badge.svg)
-![CI](https://github.com/dresende/keikan/workflows/Continuous%20Integration/badge.svg)
+![CI](https://github.com/dresende/keikan/workflows/CI/badge.svg)
 [![Coverage](https://codecov.io/gh/dresende/keikan/branch/master/graph/badge.svg?token=TZ5L3T3RW7)](https://codecov.io/gh/dresende/keikan)
 [![Maintainability](https://api.codeclimate.com/v1/badges/2dc52c1b23ef038a6d62/maintainability)](https://codeclimate.com/github/dresende/keikan/maintainability)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
