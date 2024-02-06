@@ -16,13 +16,41 @@ export class Renderer {
 		this.#debug    = (options.debug  === true);
 	}
 
-	async compilePath(path, base = process.argv[1], level = 0) {
+	async compilePath(path, ...args) {
+		let options = {};
+		let base    = ""; // empty means default (process.cwd), if null is passed it means no base
+		let level   = 0;
+
+		[ ...args ].map(arg => {
+			switch (typeof arg) {
+				case "string":
+					base = arg;
+					break;
+				case "number":
+					level = arg;
+					break;
+				default:
+					if (arg === null && !base.length) {
+						base = arg;
+					} else {
+						options = arg;
+					}
+			}
+		});
+
+		if (base !== null && !base.length) {
+			base = process.cwd();
+		}
+
 		const filename = await this.#resolver(path, base);
 
 		try {
 			const data = await readFile(filename);
 
-			return await this.compileData(data, { filename }, level);
+			options = options || {};
+			options.filename = filename;
+
+			return await this.compileData(data, options, level);
 		} catch (err) {
 			return null;
 		}
@@ -90,7 +118,7 @@ export class Renderer {
 
 						switch (command) {
 							case "include": {
-								const view = await this.compilePath(match.groups.method, options.filename ? dirname(options.filename) : null, debug ? text_level + 2 : text_level);
+								const view = await this.compilePath(match.groups.method, options, options.filename ? dirname(options.filename) : null, debug ? text_level + 2 : text_level);
 
 								if (view !== null) {
 									if (debug) {
