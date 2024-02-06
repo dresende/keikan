@@ -70,3 +70,16 @@ app.set("view engine", "html");
 
 // ...
 ```
+
+### Options
+
+```js
+import { Renderer } from "keikan"
+
+// defaults
+const keikan = new Renderer({
+	debug     : false,            // true/false
+	extension : "html",           // will be appended to view names if name does not end with .html
+	resolver  : Resolver("html"), // internal resolver (path, base_path)
+});
+```
