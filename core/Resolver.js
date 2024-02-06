@@ -1,13 +1,15 @@
 import { resolve } from "path";
 
-export function Resolver(path, base = null) {
-	if (!path.endsWith(".html")) {
-		path += ".html";
-	}
+export function Resolver(extension) {
+	return (path, base = null) => {
+		if (!path.endsWith(`.${extension}`)) {
+			path += `.${extension}`;
+		}
 
-	if (base) {
-		return resolve(base, path);
-	}
+		if (base) {
+			return resolve(base, path);
+		}
 
-	return resolve(path);
+		return resolve(path);
+	};
 }

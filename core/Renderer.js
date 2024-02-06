@@ -12,8 +12,8 @@ export class Renderer {
 	#debug    = false;
 
 	constructor(options = {}) {
-		this.#resolver = options.resolver ?? Resolver;
-		this.#debug    = (options.debug  === true);
+		this.#resolver = options.resolver ?? Resolver(options.extension ?? "html");
+		this.#debug    = (options.debug === true);
 	}
 
 	async compilePath(path, ...args) {
