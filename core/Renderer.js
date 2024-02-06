@@ -49,6 +49,10 @@ export class Renderer {
 
 			options.filename = filename;
 
+			if (!("debug" in options)) {
+				options.debug = this.#debug;
+			}
+
 			return await this.compileData(data, options, level);
 		} catch (err) {
 			return null;
@@ -56,9 +60,8 @@ export class Renderer {
 	}
 
 	async compileData(data, options = {}, level = 0) {
-		const debug  = ("debug" in options ? options.debug : this.#debug);
 		const indent = (n = 1) => {
-			if (!debug) return "";
+			if (!options.debug) return "";
 
 			return "\t".repeat(level + n);
 		};
@@ -67,7 +70,7 @@ export class Renderer {
 		const lines      = this.#dataToLines(data);
 		let code         = "";
 
-		if (debug && options.filename) {
+		if (options.debug && options.filename) {
 			code += `${indent(0)}// ${options.filename}\n`;
 		}
 
@@ -77,7 +80,7 @@ export class Renderer {
 		for (const line of lines) {
 			switch (line[0]) {
 				case "text":
-					if (!debug) {
+					if (!options.debug) {
 						line[1] = line[1].toString().replace(/\n\s+/mg, "\n");
 					}
 					code += `${indent()}__output += "${escape(line[1], text_level)}";\n`;
@@ -110,35 +113,14 @@ export class Renderer {
 						break;
 					}
 
-					const match = line[1].match(/^(?<command>\w+)\s+(?<method>[^\(]+)(\((?<parameters>.*)\))?$/);
+					const command_code = await this.#checkCommands(line[1], options, indent, text_level);
 
-					if (match) {
-						const command = match.groups.command;
-
-						switch (command) {
-							case "include": {
-								const view = await this.compilePath(match.groups.method, options, options.filename ? dirname(options.filename) : null, debug ? text_level + 2 : text_level);
-
-								if (view !== null) {
-									if (debug) {
-										code += `\n${indent()}// include ${match.groups.method}\n`;
-									}
-
-									code += `${indent()}__output += ((self) => {\n`;
-									code += view.code;
-									code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
-								} else {
-									code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
-								}
-								break;
-							}
-							default:
-								code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
-						}
+					if (command_code !== false) {
+						code += command_code;
 						continue;
 					}
 
-					const level_diff = this.#levelChange(line[1], debug);
+					const level_diff = this.#levelChange(line[1], options.debug);
 
 					if (level_diff < 0) {
 						level += level_diff;
@@ -159,7 +141,7 @@ export class Renderer {
 		const funct = new Function("__filters", code);
 
 		const ret = (env) => {
-			if (debug) {
+			if (options.debug) {
 				return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").trim();
 			}
 			return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").replace(/\x3e\n/g, ">").trim();
@@ -168,6 +150,39 @@ export class Renderer {
 		ret.code = code;
 
 		return ret;
+	}
+
+	async #checkCommands(line, options, indent, text_level) {
+		const match = line.match(/^(?<command>\w+)\s+(?<method>[^\(]+)(\((?<parameters>.*)\))?$/);
+
+		if (!match) return false;
+
+		const command = match.groups.command;
+
+		let code = "";
+
+		switch (command) {
+			case "include": {
+				const view = await this.compilePath(match.groups.method, options, options.filename ? dirname(options.filename) : null, options.debug ? text_level + 2 : text_level);
+
+				if (view !== null) {
+					if (options.debug) {
+						code += `\n${indent()}// include ${match.groups.method}\n`;
+					}
+
+					code += `${indent()}__output += ((self) => {\n`;
+					code += view.code;
+					code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
+				} else {
+					code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
+				}
+				break;
+			}
+			default:
+				code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
+		}
+
+		return code;
 	}
 
 	#dataToLines(data) {
