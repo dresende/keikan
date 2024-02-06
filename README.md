@@ -5,6 +5,7 @@
 ![Lint](https://github.com/dresende/keikan/workflows/Lint/badge.svg)
 ![CI](https://github.com/dresende/keikan/workflows/Continuous%20Integration/badge.svg)
 [![Coverage](https://codecov.io/gh/dresende/keikan/branch/master/graph/badge.svg?token=TZ5L3T3RW7)](https://codecov.io/gh/dresende/keikan)
+[![Maintainability](https://api.codeclimate.com/v1/badges/2dc52c1b23ef038a6d62/maintainability)](https://codeclimate.com/github/dresende/keikan/maintainability)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 This is a node.js template module. It's based on EJS, written in ES6 with
