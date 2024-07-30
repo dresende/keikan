@@ -24,6 +24,6 @@ describe("Filters", () => {
 	it("json", async () => {
 		const view = await keikan.compileData("<%-: { x: 2 } | json %>");
 
-		view().should.equal(`<pre>${JSON.stringify({ x: 2 }, null, 4)}</pre>`);
+		view().should.equal(JSON.stringify({ x: 2 }, null, 8));
 	});
 });
