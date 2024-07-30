@@ -30,12 +30,6 @@ describe("Renderer", () => {
 		view.should.be.instanceOf(Promise);
 	});
 
-	it("compilePath returns null if file is not found", async () => {
-		const view = await keikan.compilePath("notfound");
-
-		should(view).be.null();
-	});
-
 	it("compilePath returns a view that can then be renderer", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/simple");
 

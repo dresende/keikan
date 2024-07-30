@@ -21,13 +21,13 @@ describe("Features", () => {
 	it("<% include %> will return an <error/> if not found", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/has-bad-include");
 
-		view().should.equal("<h3>\n\t<error>Include not found: notfound</error>\n</h3>");
+		view().should.equal("<h3>\n\t<error>Include notfound error: ENOENT</error>\n</h3>");
 	});
 
 	it("<% include %> used in compileData will use process cwd", async () => {
 		const view = await keikan.compileData("<% include label() %>");
 
-		view().should.equal("<error>Include not found: label</error>");
+		view().should.equal("<error>Include label error: ENOENT</error>");
 	});
 
 	it("<%= %>, <%- %> and <%# %>", async () => {
