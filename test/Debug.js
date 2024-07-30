@@ -1,5 +1,5 @@
-import { Renderer } from "../index.js"
-import should       from "should"
+import should       from "should";
+import { Renderer } from "../index.js";
 
 const keikan = new Renderer({ debug: true });
 

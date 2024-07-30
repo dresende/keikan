@@ -1,7 +1,8 @@
-import * as Keikan from "../index.js"
-import should      from "should"
-import http        from "http"
-import express     from "express"
+// eslint-disable-next-line no-unused-vars
+import should      from "should";
+import * as Keikan from "../index.js";
+import http        from "http";
+import express     from "express";
 import { resolve } from "path";
 
 describe("Express", () => {

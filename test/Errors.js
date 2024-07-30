@@ -1,5 +1,6 @@
-import { Renderer } from "../index.js"
-import should       from "should"
+// eslint-disable-next-line no-unused-vars
+import should       from "should";
+import { Renderer } from "../index.js";
 
 const keikan = new Renderer();
 
