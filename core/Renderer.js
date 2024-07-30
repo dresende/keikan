@@ -43,6 +43,7 @@ export class Renderer {
 		}
 
 		const filename = await this.#resolver(path, base);
+		const data     = (filename == "empty://" ? "" : await readFile(filename));
 
 		try {
 			const data = await readFile(filename);
