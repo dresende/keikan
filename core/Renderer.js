@@ -160,9 +160,9 @@ export class Renderer {
 
 		switch (command) {
 			case "include": {
-				const view = await this.compilePath(match.groups.method, options, options.filename ? dirname(options.filename) : null, options.debug ? text_level + 2 : text_level);
+				try {
+					const view = await this.compilePath(match.groups.method, options, options.filename ? dirname(options.filename) : null, options.debug ? text_level + 2 : text_level);
 
-				if (view !== null) {
 					if (options.debug) {
 						code += `\n${indent()}// include ${match.groups.method}\n`;
 					}
@@ -170,8 +170,8 @@ export class Renderer {
 					code += `${indent()}__output += ((self) => {\n`;
 					code += view.code;
 					code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
-				} else {
-					code += `${indent()}__output += "${escape(new RenderingError(`Include not found: ${match.groups.method}`))}";\n`;
+				} catch (err) {
+					code += `${indent()}__output += "${escape(new RenderingError(`Include ${match.groups.method} error: ${err.code || err.message}`))}";\n`;
 				}
 				break;
 			}
