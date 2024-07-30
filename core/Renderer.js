@@ -154,6 +154,8 @@ export class Renderer {
 
 		const command = match.groups.command;
 
+		if ([ "var", "let", "const", "function", "if", "else", "switch", "case", "for" ].includes(command)) return false;
+
 		let code = "";
 
 		switch (command) {
