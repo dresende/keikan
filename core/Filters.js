@@ -12,3 +12,8 @@ export const quote = (html) => {
 export const json = (json, indent = 8) => {
 	return JSON.stringify(json, null, indent);
 };
+
+// print query string encoded object
+export const qs = (obj, sep = "&", eq = "=") => {
+	return require("querystring").stringify(obj, sep, eq);
+};
