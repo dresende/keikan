@@ -1,7 +1,7 @@
 import { readFile }       from "node:fs/promises";
 import { Resolver }       from "./Resolver.js";
 import { RenderingError } from "./RenderingError.js";
-import * as Filters       from "./Filters.js";
+import { Filters }        from "./Filters.js";
 import { dirname }        from "path";
 
 const START_BLOCK = "<%";
