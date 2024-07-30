@@ -9,6 +9,6 @@ export const quote = (html) => {
 };
 
 // print indented JSON
-export const json = (json) => {
-	return `<pre>${JSON.stringify(json, null, 4)}</pre>`;
+export const json = (json, indent = 8) => {
+	return JSON.stringify(json, null, indent);
 };
