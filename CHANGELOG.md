@@ -1,3 +1,8 @@
+## 0.2.3 - 31 Jul 2024
+
+- core:
+  - renderer: removes unknown command error and passes code directly to code
+
 ## 0.2.2 - 31 Jul 2024
 
 - core:
