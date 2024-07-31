@@ -10,10 +10,4 @@ describe("Errors", () => {
 
 		view().should.equal("<h3>Hello <error>Invalid block</error>");
 	});
-
-	it("should handle incomplete commands", async () => {
-		const view = await keikan.compileData("<% unknown_command something %>");
-
-		view().should.equal("<error>Unknown command: unknown_command</error>");
-	});
 });

@@ -1,9 +1,13 @@
 <ul>
+<%
+	let foo = "bar";
+%>
 <% [ 1, 2, 3 ].map(i => { %>
 	<% if (i % 2 == 0) { %>
-	<li>(even) <%= i %>. <%- i %></li>
+	<li>(even) <%= i %>. <%- i %> <%= foo %></li>
 	<% } else { %>
-	<li>(odd) <%= i %>. <%- i %></li>
+	<li>(odd) <%= i %>. <%- i %> <%= foo %></li>
 	<% } %>
+	<% foo = (foo == "bar" ? "foo" : "bar") %>
 <% }) %>
 </ul>

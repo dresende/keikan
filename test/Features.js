@@ -53,6 +53,6 @@ describe("Features", () => {
 	it("handles more complex views", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/complex");
 
-		view().should.equal("<ul>\n\t<li>(odd) 1. 1</li>\n\t<li>(even) 2. 2</li>\n\t<li>(odd) 3. 3</li>\n</ul>");
+		view().should.equal("<ul>\n\t<li>(odd) 1. 1 bar</li>\n\t<li>(even) 2. 2 foo</li>\n\t<li>(odd) 3. 3 bar</li>\n</ul>");
 	});
 });

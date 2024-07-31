@@ -185,7 +185,7 @@ export class Renderer {
 				break;
 			}
 			default:
-				code += `${indent()}__output += "${escape(new RenderingError(`Unknown command: ${command}`))}";\n`;
+				code += `${indent()}${line};\n`;
 		}
 
 		return code;
