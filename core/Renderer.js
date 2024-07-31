@@ -176,9 +176,10 @@ export class Renderer {
 						code += `\n${indent()}// include ${match.groups.method}\n`;
 					}
 
-					code += `${indent()}__output += ((self) => {\n`;
+					code += `${indent()}__output += (() => {\n`;
+					code += `${indent()}\tlet self = ${match.groups.parameters?.length ? match.groups.parameters : "{}"};\n`;
 					code += view.code;
-					code += `${indent()}})(${match.groups.parameters?.length ? match.groups.parameters : "{}"});\n\n`;
+					code += `${indent()}})();\n\n`;
 				} catch (err) {
 					code += `${indent()}__output += "${escape(new RenderingError(`Include ${match.groups.method} error: ${err.code || err.message}`))}";\n`;
 				}
