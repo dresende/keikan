@@ -1,3 +1,8 @@
+## 0.2.1 - 31 Jul 2024
+
+- core:
+  - resolver: adds support for null extension
+
 ## 0.2.0 - 31 Jul 2024
 
 - core:
