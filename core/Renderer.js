@@ -8,12 +8,14 @@ const START_BLOCK = "<%";
 const END_BLOCK   = "%>";
 
 export class Renderer {
-	#resolver = null;
-	#debug    = false;
+	#resolver    = null;
+	#debug       = false;
+	#empty_lines = false;
 
 	constructor(options = {}) {
-		this.#resolver = options.resolver ?? Resolver(options.extension ?? "html");
-		this.#debug    = (options.debug === true);
+		this.#resolver    = options.resolver ?? Resolver("extension" in options ? options.extension : "html");
+		this.#debug       = (options.debug === true);
+		this.#empty_lines = (options.empty_lines === true);
 	}
 
 	async compilePath(path, ...args) {
@@ -49,6 +51,10 @@ export class Renderer {
 
 		if (!("debug" in options)) {
 			options.debug = this.#debug;
+		}
+
+		if (!("empty_lines" in options)) {
+			options.empty_lines = this.#empty_lines;
 		}
 
 		return await this.compileData(data, options, level);
@@ -137,6 +143,9 @@ export class Renderer {
 
 		const ret = (env) => {
 			if (options.debug) {
+				if (options.empty_lines) {
+					return funct.call(env, Filters).trim();
+				}
 				return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").trim();
 			}
 			return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").replace(/\x3e\n/g, ">").trim();
