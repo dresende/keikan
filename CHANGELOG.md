@@ -1,3 +1,24 @@
+## 0.2.0 - 31 Jul 2024
+
+- core:
+  - filters: adds query string encoding filter
+  - filters: fixes json encoding wrongly adding html code
+  - refactors code to try and reduce complexity in functions
+  - adds options to compilePath
+  - adds support for custom extension (defaults to html)
+  - adds support for empty:// filename
+  - adds try/catch to includes to avoid throwing in the middle
+  - changes how filters are exposed to allow for expansion
+  - removes try/catch from renderer so users can catch errors
+  - fixes filters not supporting | inside code
+  - fixes support for variable declarations and control structures
+- ci:
+  - adds code climate badge to readme
+- deps:
+  - mocha@10.4.0
+  - eslint-parser@7.24.5
+  - express@4.19.2
+
 ## 0.1.1 - 5 Feb 2024
 
 - Adds Express support
