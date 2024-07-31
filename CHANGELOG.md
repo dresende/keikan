@@ -1,3 +1,9 @@
+## 0.2.2 - 31 Jul 2024
+
+- core:
+  - resolver: fixes not adding an extension if there's one already
+  - renderer: adds empty_lines option to avoid removing them from output
+
 ## 0.2.1 - 31 Jul 2024
 
 - core:
