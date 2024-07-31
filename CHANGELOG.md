@@ -1,3 +1,8 @@
+## 0.3.0 - 31 Jul 2024
+
+- core:
+  - renderer: adds support for <% include view(data, param2,. ... ) %>
+
 ## 0.2.3 - 31 Jul 2024
 
 - core:
