@@ -6,7 +6,7 @@ export function Resolver(extension) {
 			return path;
 		}
 
-		if (!path.endsWith(`.${extension}`)) {
+		if (extension !== null && !path.endsWith(`.${extension}`)) {
 			path += `.${extension}`;
 		}
 
