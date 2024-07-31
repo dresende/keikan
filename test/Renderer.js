@@ -31,6 +31,12 @@ describe("Renderer", () => {
 		view.should.be.instanceOf(Promise);
 	});
 
+	it("compilePath accepts empty:// as filename", async () => {
+		const view = await keikan.compilePath("empty://");
+
+		view().should.be.equal("");
+	});
+
 	it("compilePath returns a view that can then be renderer", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/simple");
 
