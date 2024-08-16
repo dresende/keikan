@@ -148,7 +148,7 @@ export class Renderer {
 				}
 				return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").trim();
 			}
-			return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").replace(/\x3e\n/g, ">").trim();
+			return funct.call(env, Filters).replace(/\n\s*\n/g, " \n").replace(/\x3e\n/g, ">").trim();
 		};
 
 		ret.code = code;
