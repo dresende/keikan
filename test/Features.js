@@ -56,11 +56,11 @@ describe("Features", () => {
 		view().should.equal("<h3>\n\t<strong>\n\t\tHello\n\t</strong>\n</h3>");
 	});
 
-	it("clears empty lines", async () => {
+	it("keeps empty lines", async () => {
 		const keikan = new Renderer({ debug: true, empty_lines: true });
 		const view   = await keikan.compileData("<b>this is\n\nan example</b>");
 
-		view().should.equal("<b>this is\nan example</b>");
+		view().should.equal("<b>this is\n\nan example</b>");
 	});
 
 	it("handles more complex views", async () => {
