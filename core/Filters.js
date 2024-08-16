@@ -1,3 +1,5 @@
+import querystring from "querystring";
+
 export const Filters = {};
 
 // convert \n to <br>
@@ -17,5 +19,5 @@ Filters.json = (json, indent = 8) => {
 
 // print query string encoded object
 Filters.qs = (obj, sep = "&", eq = "=") => {
-	return require("querystring").stringify(obj, sep, eq);
+	return querystring.stringify(obj, sep, eq);
 };
