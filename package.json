@@ -10,7 +10,7 @@
 	"main"        : "index.js",
 
 	"devDependencies" : {
-		"mocha"                : "^10.2.0",
+		"mocha"                : "^10.7.3",
 		"should"               : "^13.2.3",
 		"c8"                   : "^9.1.0",
 		"@babel/eslint-parser" : "^7.25.1",
