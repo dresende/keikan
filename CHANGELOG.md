@@ -1,3 +1,9 @@
+## 0.4.0 - 16 Aug 2024
+
+- renderer:
+  - adds one space to avoid removing all spaces between tags and screwing the layout
+  - improves list of reserved words to ignore
+
 ## 0.3.0 - 31 Jul 2024
 
 - core:
