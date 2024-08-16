@@ -20,9 +20,15 @@ describe("Features", () => {
 	});
 
 	it("<% include %> will return an <error/> if not found", async () => {
-		const view = await keikan.compilePath(import.meta.dirname + "/views/has-bad-include");
+		const view = await keikan.compilePath(import.meta.dirname + "/views/has-notfound-include");
 
 		view().should.equal("<h3>\n\t<error>Include notfound error: ENOENT</error>\n</h3>");
+	});
+
+	it("<% include %> will return an <error/> if an error occurs inside include", async () => {
+		const view = await keikan.compilePath(import.meta.dirname + "/views/has-bad-include");
+
+		view().should.equal("<h3>\n\tReferenceError: bad is not defined\n</h3>");
 	});
 
 	it("<% include %> used in compileData will use process cwd", async () => {
@@ -48,6 +54,13 @@ describe("Features", () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/long");
 
 		view().should.equal("<h3>\n\t<strong>\n\t\tHello\n\t</strong>\n</h3>");
+	});
+
+	it("clears empty lines", async () => {
+		const keikan = new Renderer({ debug: true, empty_lines: true });
+		const view   = await keikan.compileData("<b>this is\n\nan example</b>");
+
+		view().should.equal("<b>this is\nan example</b>");
 	});
 
 	it("handles more complex views", async () => {
