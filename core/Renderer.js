@@ -71,6 +71,14 @@ export class Renderer {
 		const lines      = this.#dataToLines(data);
 		let code         = "";
 
+		if (!("debug" in options)) {
+			options.debug = this.#debug;
+		}
+
+		if (!("empty_lines" in options)) {
+			options.empty_lines = this.#empty_lines;
+		}
+
 		if (options.debug && options.filename) {
 			code += `${indent(0)}// ${options.filename}\n`;
 		}
