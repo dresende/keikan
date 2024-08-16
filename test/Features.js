@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-unused-vars
+import { resolve }  from "path";
 import should       from "should";
 import { Renderer } from "../index.js";
 
@@ -9,6 +10,13 @@ describe("Features", () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/has-include");
 
 		view({ name: "world" }).should.equal("<h3>\n\tHello world\n</h3>");
+	});
+
+	it("<% include %> can have another default extension", async () => {
+		const keikan = new Renderer({ extension: "ejs" });
+		const view = await keikan.compilePath(import.meta.dirname + "/views/has-include");
+
+		view().should.equal("<h3>Hello world</h3>");
 	});
 
 	it("<% include %> can be called with no arguments", async () => {
@@ -67,5 +75,17 @@ describe("Features", () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/complex");
 
 		view().should.equal("<ul>\n\t<li>(odd) 1. 1 bar</li>\n\t<li>(even) 2. 2 foo</li>\n\t<li>(odd) 3. 3 bar</li>\n</ul>");
+	});
+
+	it("supports custom resolver", async () => {
+		const keikan = new Renderer({
+			debug    : false,
+			resolver : (path, base = null) => {
+				return resolve(base, path + ".html");
+			},
+		});
+		const view = await keikan.compilePath(import.meta.dirname + "/views/has-include");
+
+		view({ name: "world" }).should.equal("<h3> \nHello world \n</h3>");
 	});
 });
