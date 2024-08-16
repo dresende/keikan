@@ -1,3 +1,14 @@
+## 0.4.1 - 16 Aug 2024
+
+- filters:
+  - fixes querystring
+- renderer:
+  - fixes default options not being used in compileData
+- ci:
+  - fixes empty lines test
+  - fixes features eslint disable flag
+  - updates coverage
+
 ## 0.4.0 - 16 Aug 2024
 
 - renderer:
