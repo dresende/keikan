@@ -1,3 +1,8 @@
+## 0.4.2 - 22 Aug 2024
+
+- renderer:
+  - ensure we do not clear necessary whitespace with a new line
+
 ## 0.4.1 - 16 Aug 2024
 
 - filters:
