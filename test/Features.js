@@ -86,6 +86,6 @@ describe("Features", () => {
 		});
 		const view = await keikan.compilePath(import.meta.dirname + "/views/has-include");
 
-		view({ name: "world" }).should.equal("<h3> \nHello world \n</h3>");
+		view({ name: "world" }).should.equal("<h3> \n Hello world \n</h3>");
 	});
 });

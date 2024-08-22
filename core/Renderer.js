@@ -90,7 +90,7 @@ export class Renderer {
 			switch (line[0]) {
 				case "text":
 					if (!options.debug) {
-						line[1] = line[1].toString().replace(/\n\s+/mg, "\n");
+						line[1] = line[1].toString().replace(/\n\s+/mg, "\n ");
 					}
 					code += `${indent()}__output += "${escape(line[1], text_level)}";\n`;
 					break;
