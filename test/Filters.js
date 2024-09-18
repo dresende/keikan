@@ -39,4 +39,10 @@ describe("Filters", () => {
 
 		view().should.equal("\"x=2&y=3\"");
 	});
+
+	it("json | qs (more confusing)", async () => {
+		const view = await keikan.compileData("<%-: { x : (true || false) && 1 } | qs | json %>");
+
+		view().should.equal("\"x=1\"");
+	});
 });
