@@ -1,3 +1,12 @@
+## 0.4.3 - 18 Sep 2024
+
+- renderer:
+  - fixes using more than one filter
+- ci:
+  - adds test using 2 filters at once
+- deps:
+  - [express@4.21.0](https://www.npmjs.com/package/express)
+
 ## 0.4.2 - 22 Aug 2024
 
 - renderer:
