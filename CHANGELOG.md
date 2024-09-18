@@ -1,3 +1,10 @@
+## 0.4.4 - 18 Sep 2024
+
+- renderer:
+  - fixes using more than one filter for good (hope so)
+- ci:
+  - filters: adds more complex test to validate multiple filters
+
 ## 0.4.3 - 18 Sep 2024
 
 - renderer:
