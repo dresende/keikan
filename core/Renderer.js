@@ -111,7 +111,7 @@ export class Renderer {
 						if (line[1][1] == ":") {
 							// unquoted data with filters
 							const line_code = line[1].substr(2).trim();
-							const p         = line_code.lastIndexOf("|");
+							const p         = line_code.indexOf("|");
 							const filters   = line_code.substr(p + 1).split(/\s*\|\s*/).map(name => name.trim()).filter(name => name.length);
 
 							code += `${indent()}__output += ${filters.reduce((code_line, name) => (`__filters.${name}(${code_line})`), line_code.substr(0, p).trim())};\n`;
