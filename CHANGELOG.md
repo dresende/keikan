@@ -1,3 +1,13 @@
+## 1.0.0 - 8 Jul 2025
+
+- renderer:
+  - adds full support for async inside a view
+- deps:
+  - [@babel/eslint-parser@7.28.0](https://www.npmjs.com/package/@babel/eslint-parser)
+  - [c8@10.1.3](https://www.npmjs.com/package/c8)
+  - [express@5.1.0](https://www.npmjs.com/package/express)
+  - [mocha@11.7.1](https://www.npmjs.com/package/mocha)
+
 ## 0.4.4 - 18 Sep 2024
 
 - renderer:
