@@ -18,7 +18,7 @@ describe("Renderer", () => {
 	it("compileData handles code", async () => {
 		const view = await keikan.compileData("<h3><% if (true) { %>hello world<% } %></h3>");
 
-		view().should.be.equal("<h3>hello world</h3>");
+		(await view()).should.be.equal("<h3>hello world</h3>");
 	});
 
 	it("exposes a compilePath method", () => {
@@ -34,18 +34,18 @@ describe("Renderer", () => {
 	it("compilePath accepts empty:// as filename", async () => {
 		const view = await keikan.compilePath("empty://");
 
-		view().should.be.equal("");
+		(await view()).should.be.equal("");
 	});
 
 	it("compilePath returns a view that can then be renderer", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/simple");
 
-		view({ name: "world" }).should.equal("<h3>Hello world</h3>");
+		(await view({ name: "world" })).should.equal("<h3>Hello world</h3>");
 	});
 
 	it("compilePath will use process cwd when base is explicitly passed as null", async () => {
 		const view = await keikan.compilePath("test/views/simple", null);
 
-		view({ name: "world" }).should.equal("<h3>Hello world</h3>");
+		(await view({ name: "world" })).should.equal("<h3>Hello world</h3>");
 	});
 });

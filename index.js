@@ -9,5 +9,5 @@ export const renderPath = async (filename, options, next) => {
 	const renderer = new Renderer();
 	const view     = await renderer.compilePath(filename);
 
-	return next(null, view(options));
+	return next(null, await view(options));
 };

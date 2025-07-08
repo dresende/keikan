@@ -13,6 +13,6 @@ describe("Debug", () => {
 	it("outputs view keeping all whitespace and use include indent", async () => {
 		const view = await keikan.compilePath(import.meta.dirname + "/views/has-include");
 
-		view({ name: "Diogo" }).should.equal("<h3>\n\tHello Diogo\n</h3>");
+		(await view({ name: "Diogo" })).should.equal("<h3>\n\tHello Diogo\n</h3>");
 	});
 });

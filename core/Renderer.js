@@ -4,8 +4,9 @@ import { RenderingError } from "./RenderingError.js";
 import { Filters }        from "./Filters.js";
 import { dirname }        from "path";
 
-const START_BLOCK = "<%";
-const END_BLOCK   = "%>";
+const START_BLOCK   = "<%";
+const END_BLOCK     = "%>";
+const AsyncFunction = async function () {}.constructor;
 
 export class Renderer {
 	#resolver    = null;
@@ -147,16 +148,16 @@ export class Renderer {
 		code += `${indent(0)}} } catch (err) { __output += err; }\n`;
 		code += `${indent(0)}return __output;\n`;
 
-		const funct = new Function("__filters", code);
+		const funct = new AsyncFunction("__filters", code);
 
-		const ret = (env) => {
+		const ret = async (env) => {
 			if (options.debug) {
 				if (options.empty_lines) {
-					return funct.call(env, Filters).trim();
+					return (await funct.call(env, Filters)).trim();
 				}
-				return funct.call(env, Filters).replace(/\n\s*\n/g, "\n").trim();
+				return (await funct.call(env, Filters)).replace(/\n\s*\n/g, "\n").trim();
 			}
-			return funct.call(env, Filters).replace(/\n\s*\n/g, " \n").replace(/\x3e\n/g, ">").trim();
+			return (await funct.call(env, Filters)).replace(/\n\s*\n/g, " \n").replace(/\x3e\n/g, ">").trim();
 		};
 
 		ret.code = code;
