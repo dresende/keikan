@@ -36,7 +36,7 @@ import { Renderer } from "keikan"
 const keikan = new Renderer({ debug : true });
 const view   = await keikan.compilePath("path/to/file");
 
-console.log(view({ name: "Diogo" }));
+console.log(await view({ name: "Diogo" }));
 ```
 
 The example will print:
